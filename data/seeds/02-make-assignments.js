@@ -3,6 +3,7 @@ const projects = [
   {
     project_name: "Project Gambit",
     project_description: "Ace of Spades destroys generator of villain base",
+    project_completed: true,
   },
 ];
 

@@ -1,7 +1,13 @@
 const db = require("../../data/dbConfig");
 
 async function findAll() {
-  return db("projects");
+  const projects = await db("projects");
+  return projects.map((project) => {
+    return {
+      ...project,
+      project_completed: project.project_completed === 1,
+    };
+  });
 }
 
 async function add(project) {
@@ -9,6 +15,12 @@ async function add(project) {
     .insert(project)
     .then(([id]) => {
       return db("projects").where("project_id", id).first();
+    })
+    .then((project) => {
+      return {
+        ...project,
+        project_completed: project.project_completed === 1,
+      };
     });
 }
 

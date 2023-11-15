@@ -1,7 +1,7 @@
 const db = require("../../data/dbConfig");
 
 async function findAll() {
-  return db("tasks as t")
+  const tasks = await db("tasks as t")
     .leftJoin("projects as p", "t.project_id", "p.project_id")
     .select(
       "t.task_id",
@@ -11,6 +11,12 @@ async function findAll() {
       "p.project_name",
       "p.project_description"
     );
+  return tasks.map((task) => {
+    return {
+      ...task,
+      task_completed: task.task_completed === 1,
+    };
+  });
 }
 
 async function add(task) {
@@ -18,6 +24,12 @@ async function add(task) {
     .insert(task)
     .then(([id]) => {
       return db("tasks").where("task_id", id).first();
+    })
+    .then((task) => {
+      return {
+        ...task,
+        task_completed: task.task_completed === 1,
+      };
     });
 }
 
